@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from models import Endpoint, MLAlgorithm, MLAlgorithmStatus, MLRequest
+from .models import Endpoint, MLAlgorithm, MLAlgorithmStatus, MLRequest
 
 
 class EndpointSerializer(serializers.ModelSerializer):

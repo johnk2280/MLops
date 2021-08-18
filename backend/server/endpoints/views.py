@@ -4,8 +4,8 @@ from django.shortcuts import render
 from rest_framework import viewsets, mixins
 from rest_framework.exceptions import APIException
 
-from models import Endpoint, MLAlgorithm, MLAlgorithmStatus, MLRequest
-from serializers import EndpointSerializer, MLAlgorithmSerializer, MLAlgorithmStatusSerializer, MLRequestSerializer
+from .models import Endpoint, MLAlgorithm, MLAlgorithmStatus, MLRequest
+from .serializers import EndpointSerializer, MLAlgorithmSerializer, MLAlgorithmStatusSerializer, MLRequestSerializer
 
 
 class EndpointViewSet(
@@ -46,7 +46,7 @@ class MLAlgorithmStatusViewSet(
     mixins.CreateModelMixin,
 ):
     serializer_class = MLAlgorithmStatusSerializer
-    queryset = MLAlgorithmStatus.object.all()
+    queryset = MLAlgorithmStatus.objects.all()
 
     def perform_create(self, serializer):
         try:

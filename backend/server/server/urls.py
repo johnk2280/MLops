@@ -1,12 +1,11 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
-
-from server.endpoints.urls import urlpatterns as endpoints_urlpatterns
+# from backend.server.endpoints.urls import urlpatterns as endpoints_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    endpoints_urlpatterns,
+    path('', include('endpoints.urls'))
+    # endpoints_urlpatterns,
 ]
 
-# urlpatterns += endpoints_urlpatterns
