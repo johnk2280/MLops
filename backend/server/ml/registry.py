@@ -1,4 +1,4 @@
-from server.endpoints.models import Endpoint, MLAlgorithm, MLAlgorithmStatus
+from endpoints.models import Endpoint, MLAlgorithm, MLAlgorithmStatus
 
 
 class MLRegistry:
@@ -13,7 +13,7 @@ class MLRegistry:
             code=kwargs['algorithm_code'],
             version=kwargs['algorithm_version'],
             owner=['owner'],
-            parent_endpoint=kwargs['parent_endpoint'],
+            parent_endpoint=endpoint,
         )
         if algorithm_created_at:
             status = MLAlgorithmStatus(

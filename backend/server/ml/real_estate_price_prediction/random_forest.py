@@ -1,4 +1,5 @@
 from datetime import datetime
+from pathlib import Path
 import random
 
 import joblib
@@ -135,10 +136,11 @@ class FeatureGenerator:
 
 class RandomForestModel:
     def __init__(self):
-        path_to_artifacts = '../../../../research/'
+        base_dir = Path(__file__).resolve().parent.parent.parent.parent
+        models_dir = base_dir.joinpath('research')
         self.preprocessor = DataPreprocessing()
         self.features_gen = FeatureGenerator()
-        self.model = joblib.load(path_to_artifacts + 'rf_model.joblib')
+        self.model = joblib.load(models_dir.joinpath('rf_model.joblib'))
 
     def preprocess_the_data(self, input_data):
         input_data = pd.DataFrame(input_data)
