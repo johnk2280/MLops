@@ -12,7 +12,7 @@ class MLRegistry:
             description=kwargs['algorithm_description'],
             code=kwargs['algorithm_code'],
             version=kwargs['algorithm_version'],
-            owner=['owner'],
+            owner=kwargs['owner'],
             parent_endpoint=endpoint,
         )
         if algorithm_created_at:
