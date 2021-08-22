@@ -1,6 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 import random
+import json
 
 import joblib
 
@@ -30,7 +31,7 @@ class DataPreprocessing:
         """Сохранение статистик"""
         # Расчет медиан
         self.medians = X.median()
-        self.kitchen_square_quantile = X['KitchenSquare'].quantile(.975)
+        # self.kitchen_square_quantile = X['KitchenSquare'].quantile(.975)
 
     def transform(self, X):
         """Трансформация данных"""
@@ -141,9 +142,11 @@ class RandomForestModel:
         self.preprocessor = DataPreprocessing()
         self.features_gen = FeatureGenerator()
         self.model = joblib.load(models_dir.joinpath('rf_model.joblib'))
+        # self.preprocessor = joblib.load(models_dir.joinpath('preprocessor.joblibd'))
+        # self.features_gen = joblib.load(models_dir.joinpath('features_gen.joblibd'))
 
     def preprocess_the_data(self, input_data):
-        input_data = pd.DataFrame(input_data)
+        input_data = pd.DataFrame(input_data, index=[0])
         self.preprocessor.fit(input_data)
         input_data = self.preprocessor.transform(input_data)
         return input_data
@@ -159,6 +162,3 @@ class RandomForestModel:
             return self.model.predict(input_data)
         except Exception as e:
             return {'status': 'Error', 'message': str(e)}
-
-
-

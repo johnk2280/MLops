@@ -24,7 +24,7 @@ try:
     rf_model = random_forest.RandomForestModel()
     registry.add_algorithm(
         endpoint_name='real_estate_price_prediction',
-        algorithm_object='rf_model',
+        algorithm_object=rf_model,
         algorithm_name='random forest',
         algorithm_status='production',
         algorithm_version='0.0.1',
