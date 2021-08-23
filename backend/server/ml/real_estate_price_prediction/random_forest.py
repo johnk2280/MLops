@@ -20,64 +20,63 @@ import seaborn as sns
 
 
 class DataPreprocessing:
-    """Подготовка исходных данных"""
 
     def __init__(self):
-        """Параметры класса"""
         self.medians = None
         self.kitchen_square_quantile = None
 
-    def fit(self, X):
-        """Сохранение статистик"""
-        # Расчет медиан
-        self.medians = X.median()
-        # self.kitchen_square_quantile = X['KitchenSquare'].quantile(.975)
+    def fit(self, incoming_data):
+        base_dir = Path(__file__).resolve().parent.parent.parent.parent
+        models_dir = base_dir.joinpath('research')
+        self.medians = joblib.load(models_dir.joinpath('medians.joblib'))
+        self.kitchen_square_quantile = joblib.load(models_dir.joinpath('kitchen_square_quantile.joblib'))
 
-    def transform(self, X):
-        """Трансформация данных"""
-
+    def transform(self, incoming_data):
+        incoming_data = json.load(incoming_data)
+        print(incoming_data, type(incoming_data))
         # Rooms
-        X.loc[X['Rooms'] >= 6, 'Rooms'] = X['Rooms'] // 10
-        X.loc[X['Rooms'] == 0, 'Rooms'] = 1
+        incoming_data.loc[incoming_data['Rooms'] >= 6, 'Rooms'] = incoming_data['Rooms'] // 10
+        incoming_data.loc[incoming_data['Rooms'] == 0, 'Rooms'] = 1
 
         # KitchenSquare
         condition = (
-                        X['KitchenSquare'].isna()) | (X['KitchenSquare'] > self.kitchen_square_quantile
-                                                      ) | (X['KitchenSquare'] == 0)
+                        incoming_data['KitchenSquare'].isna()) | (
+                                incoming_data['KitchenSquare'] > self.kitchen_square_quantile
+                                ) | (incoming_data['KitchenSquare'] == 0)
 
-        X.loc[condition, 'KitchenSquare'] = X['Square'] * .2
+        incoming_data.loc[condition, 'KitchenSquare'] = incoming_data['Square'] * .2
 
-        X.loc[X['KitchenSquare'] < 3, 'KitchenSquare'] = 3
+        incoming_data.loc[incoming_data['KitchenSquare'] < 3, 'KitchenSquare'] = 3
 
         # HouseFloor, Floor
-        condition_2 = (X['HouseFloor'] == 0) | (X['HouseFloor'] > 90)
-        X.loc[condition_2, 'HouseFloor'] = X['Floor']
+        condition_2 = (incoming_data['HouseFloor'] == 0) | (incoming_data['HouseFloor'] > 90)
+        incoming_data.loc[condition_2, 'HouseFloor'] = incoming_data['Floor']
 
-        condition_3 = (X['Floor'] > X['HouseFloor'])
-        X.loc[condition_3, 'Floor'] = X['HouseFloor']
+        condition_3 = (incoming_data['Floor'] > incoming_data['HouseFloor'])
+        incoming_data.loc[condition_3, 'Floor'] = incoming_data['HouseFloor']
 
         # HouseYear
         current_year = datetime.now().year
 
-        X['HouseYear_outlier'] = 0
-        X.loc[X['HouseYear'] > current_year, 'HouseYear_outlier'] = 1
+        incoming_data['HouseYear_outlier'] = 0
+        incoming_data.loc[incoming_data['HouseYear'] > current_year, 'HouseYear_outlier'] = 1
 
-        X.loc[X['HouseYear'] > current_year, 'HouseYear'] = current_year
+        incoming_data.loc[incoming_data['HouseYear'] > current_year, 'HouseYear'] = current_year
 
         # Healthcare_1
-        if 'Healthcare_1' in X.columns:
-            X.drop('Healthcare_1', axis=1, inplace=True)
+        if 'Healthcare_1' in incoming_data.columns:
+            incoming_data.drop('Healthcare_1', axis=1, inplace=True)
 
         # LifeSquare
-        expression = (X['Square'] * .9 - X['KitchenSquare'])
-        X.loc[(X['LifeSquare'].isna()), 'LifeSquare'] = expression
+        expression = (incoming_data['Square'] * .9 - incoming_data['KitchenSquare'])
+        incoming_data.loc[(incoming_data['LifeSquare'].isna()), 'LifeSquare'] = expression
 
-        condition_3 = (X['LifeSquare'] > expression)
-        X.loc[condition_3, 'LifeSquare'] = expression
+        condition_3 = (incoming_data['LifeSquare'] > expression)
+        incoming_data.loc[condition_3, 'LifeSquare'] = expression
 
-        X.fillna(self.medians, inplace=True)
+        incoming_data.fillna(self.medians, inplace=True)
 
-        return X
+        return incoming_data
 
 
 class FeatureGenerator:
@@ -92,47 +91,48 @@ class FeatureGenerator:
         self.floor_max = None
         self.district_size = None
 
-    def fit(self, X, y=None):
-        X = X.copy()
+    def fit(self, incoming_data, y=None):
+        incoming_data = incoming_data.copy()
 
         # Binary features
         self.binary_to_numbers = {'A': 0, 'B': 1}
 
         # DistrictID
-        self.district_size = X['DistrictId'].value_counts().reset_index() \
+        self.district_size = incoming_data['DistrictId'].value_counts().reset_index() \
             .rename(columns={'index': 'DistrictId', 'DistrictId': 'DistrictSize'})
 
-    def transform(self, X):
+    def transform(self, incoming_data):
         # Binary features
-        X['Ecology_2'] = X['Ecology_2'].map(self.binary_to_numbers)  # self.binary_to_numbers = {'A': 0, 'B': 1}
-        X['Ecology_3'] = X['Ecology_3'].map(self.binary_to_numbers)
-        X['Shops_2'] = X['Shops_2'].map(self.binary_to_numbers)
+        incoming_data['Ecology_2'] = incoming_data['Ecology_2'].map(
+            self.binary_to_numbers)  # self.binary_to_numbers = {'A': 0, 'B': 1}
+        incoming_data['Ecology_3'] = incoming_data['Ecology_3'].map(self.binary_to_numbers)
+        incoming_data['Shops_2'] = incoming_data['Shops_2'].map(self.binary_to_numbers)
 
         # DistrictId, IsDistrictLarge
-        X = X.merge(self.district_size, on='DistrictId', how='left')
+        incoming_data = incoming_data.merge(self.district_size, on='DistrictId', how='left')
 
-        X['new_district'] = 0
-        X.loc[X['DistrictSize'].isna(), 'new_district'] = 1
+        incoming_data['new_district'] = 0
+        incoming_data.loc[incoming_data['DistrictSize'].isna(), 'new_district'] = 1
 
-        X['DistrictSize'].fillna(5, inplace=True)
+        incoming_data['DistrictSize'].fillna(5, inplace=True)
 
-        X['IsDistrictLarge'] = (X['DistrictSize'] > 100).astype(int)
+        incoming_data['IsDistrictLarge'] = (incoming_data['DistrictSize'] > 100).astype(int)
 
-        return X
+        return incoming_data
 
-    def floor_to_cat(self, X):
+    def floor_to_cat(self, incoming_data):
         bins = [0, 3, 5, 9, 15, self.floor_max]
-        X['floor_cat'] = pd.cut(X['Floor'], bins=bins, labels=False)
+        incoming_data['floor_cat'] = pd.cut(incoming_data['Floor'], bins=bins, labels=False)
 
-        X['floor_cat'].fillna(-1, inplace=True)
-        return X
+        incoming_data['floor_cat'].fillna(-1, inplace=True)
+        return incoming_data
 
-    def year_to_cat(self, X):
+    def year_to_cat(self, incoming_data):
         bins = [0, 1941, 1945, 1980, 2000, 2010, self.house_year_max]
-        X['year_cat'] = pd.cut(X['HouseYear'], bins=bins, labels=False)
+        incoming_data['year_cat'] = pd.cut(incoming_data['HouseYear'], bins=bins, labels=False)
 
-        X['year_cat'].fillna(-1, inplace=True)
-        return X
+        incoming_data['year_cat'].fillna(-1, inplace=True)
+        return incoming_data
 
 
 class RandomForestModel:
