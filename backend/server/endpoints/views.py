@@ -85,20 +85,14 @@ class PredictView(views.APIView):
         if algorithm_version:
             algorithms = algorithms.filter(version=algorithm_version)
 
-        if len(algorithms) == 0:
+        algorithms = list(algorithms)
+        if not algorithms[-1]:
             return Response(
                 {"status": "Error", "message": "ML algorithm is not available"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if len(algorithms) != 1:
-            return Response(
-                {"status": "Error",
-                 "message": "ML algorithm selection is ambiguous. Please specify algorithm version."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        algorithm_object = registry.endpoints[algorithms[0].id]
+        algorithm_object = registry.endpoints[algorithms[-1].id]
         prediction = algorithm_object.predict(request.data)
 
         ml_request = MLRequest(
@@ -114,3 +108,4 @@ class PredictView(views.APIView):
 
         return Response(prediction)
 
+#     TODO: покрыть тестами PredictView, отрефакторить код
