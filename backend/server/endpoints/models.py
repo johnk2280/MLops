@@ -18,7 +18,6 @@ class MLAlgorithm(models.Model):
     owner = models.CharField(max_length=128)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     parent_endpoint = models.ForeignKey(Endpoint, on_delete=models.CASCADE)
-    full_name = models
 
     def __str__(self):
         return f'{self.name} - {self.pk}'
