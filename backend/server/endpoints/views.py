@@ -101,11 +101,10 @@ class PredictView(views.APIView):
         algorithm_object = registry.endpoints[algorithms[0].id]
         prediction = algorithm_object.predict(request.data)
 
-        label = prediction['label'] if 'label' in prediction else 'error'
         ml_request = MLRequest(
             input_data=json.dumps(request.data),
             full_response=prediction,
-            response=label,
+            response='',
             feedback='',
             parent_mlalgorithm=algorithms[0],
         )
