@@ -88,7 +88,10 @@ class PredictView(views.APIView):
         algorithms = list(algorithms)
         if not algorithms[-1]:
             return Response(
-                {"status": "Error", "message": "ML algorithm is not available"},
+                {
+                    "status": "Error",
+                    "message": "ML algorithm is not available"
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
