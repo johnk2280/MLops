@@ -85,8 +85,7 @@ class PredictView(views.APIView):
         if algorithm_version:
             algorithms = algorithms.filter(version=algorithm_version)
 
-        algorithms = list(algorithms)
-        if not algorithms[-1]:
+        if not list(algorithms)[-1]:
             return Response(
                 {
                     "status": "Error",
