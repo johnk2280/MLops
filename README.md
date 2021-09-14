@@ -31,8 +31,9 @@ http://127.0.0.1:8000/api/v1/real_estate_price_prediction/predict/
 
     {
         "status": "OK",
-        "message": "predicted_price - [185852.62669878]",
-        "request_id": 38
+        "price": 185852.6266987764,
+        "message": "predicted_price - 185852.6266987764",
+        "request_id": 40
     }
 
 TODO:
