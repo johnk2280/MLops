@@ -124,9 +124,11 @@ class RandomForestModel:
         input_data = pd.DataFrame(input_data, index=[0])
         try:
             input_data = self.generate_features(self.preprocess_the_data(input_data))
+            predicted_price = self.model.predict(input_data)[0]
             return {
                 'status': 'OK',
-                'message': f'predicted_price - {self.model.predict(input_data)}',
+                'price': predicted_price,
+                'message': f'predicted_price - {predicted_price}',
             }
         except Exception as e:
             return {

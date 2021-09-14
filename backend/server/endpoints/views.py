@@ -85,7 +85,7 @@ class PredictView(views.APIView):
         if algorithm_version:
             algorithms = algorithms.filter(version=algorithm_version)
 
-        if not list(algorithms)[-1]:
+        if not algorithms.last():
             return Response(
                 {
                     "status": "Error",
@@ -94,7 +94,7 @@ class PredictView(views.APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        algorithm_object = registry.endpoints[algorithms[-1].id]
+        algorithm_object = registry.endpoints[algorithms.last().id]
         prediction = algorithm_object.predict(request.data)
 
         ml_request = MLRequest(
@@ -102,7 +102,7 @@ class PredictView(views.APIView):
             full_response=prediction,
             response='',
             feedback='',
-            parent_mlalgorithm=algorithms[0],
+            parent_mlalgorithm=algorithms.last(),
         )
         ml_request.save()
 
