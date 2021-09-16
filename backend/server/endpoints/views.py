@@ -9,6 +9,8 @@ from rest_framework.response import Response
 
 from .models import Endpoint, MLAlgorithm, MLAlgorithmStatus, MLRequest
 from .serializers import EndpointSerializer, MLAlgorithmSerializer, MLAlgorithmStatusSerializer, MLRequestSerializer
+# from server.ml.registry import MLRegistry
+# from server.server.wsgi import registry
 from ml.registry import MLRegistry
 from server.wsgi import registry
 

@@ -12,12 +12,16 @@ import inspect
 
 from django.core.wsgi import get_wsgi_application
 
-from ml.registry import MLRegistry
-from ml.real_estate_price_prediction import random_forest
+# from server.ml.registry import MLRegistry
+# from server.ml.real_estate_price_prediction import random_forest
+
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.settings')
 
 application = get_wsgi_application()
+
+from ml.real_estate_price_prediction import random_forest
+from ml.registry import MLRegistry
 
 try:
     registry = MLRegistry()

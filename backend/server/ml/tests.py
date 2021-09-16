@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-from ml.real_estate_price_prediction.random_forest import RandomForestModel
+# from server.ml.real_estate_price_prediction.random_forest import RandomForestModel
+from server.ml.real_estate_price_prediction.random_forest import RandomForestModel
 
 
 class MLTests(TestCase):
