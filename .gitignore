@@ -105,7 +105,7 @@ celerybeat.pid
 .env
 .venv
 env/
-venv/
+../venv/
 ENV/
 env.bak/
 venv.bak/
@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+backend/research/Copy of Transformer_in time_series_pytorch.ipynb
+/backend/server/for_example.pth
+/backend/server/Без названия.ipynb
+/backend/server/Ноутбук Марата.ipynb
+.idea/
