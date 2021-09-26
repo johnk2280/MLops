@@ -16,7 +16,8 @@ from django.core.wsgi import get_wsgi_application
 # from server.ml.real_estate_price_prediction import random_forest
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.settings')
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.settings')
+os.environ['DJANGO_SETTINGS_MODULE'] = 'server.settings'
 
 application = get_wsgi_application()
 
