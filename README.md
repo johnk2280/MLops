@@ -2,8 +2,11 @@
 
 Стек: DjangoFramework, DRF, SQLite
 
-Адрес:
+Адрес запуске через встроеный сервер django:
 http://127.0.0.1:8000/api/v1/real_estate_price_prediction/predict/
+
+Адрес при запуске через docker-compose: 
+http://0.0.0.0:8000/api/v1/real_estate_price_prediction/predict/
 
 Структура данных и наименование признаков подаваемых на вход:
 
