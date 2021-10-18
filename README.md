@@ -1,12 +1,22 @@
 # MLops
 
-Стек: DjangoFramework, DRF, SQLite
+#### Установка:
+1. Склонировать данный репозиторий;
+2. Из корневой директории приложения собрать образ командой:
 
-Адрес запуске через встроеный сервер django:
-http://127.0.0.1:8000/api/v1/real_estate_price_prediction/predict/
+        $ docker-compose build
+3. Запустить:
 
-Адрес при запуске через docker-compose: 
-http://0.0.0.0:8000/api/v1/real_estate_price_prediction/predict/
+        $ docker-compose up
+ 
+
+>_Стек: DjangoFramework, DRF, SQLite_
+>
+>_Адрес запуске через встроеный сервер django:_
+>_http://127.0.0.1:8000/api/v1/real_estate_price_prediction/predict/_
+>
+>_Адрес при запуске через docker-compose:_ 
+>_http://0.0.0.0:8000/api/v1/real_estate_price_prediction/predict/_
 
 Структура данных и наименование признаков подаваемых на вход:
 
